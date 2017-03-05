@@ -29,10 +29,6 @@ frequencies['A#'] = 932.33
 frequencies['B'] = 987.77
 frequencies['C6'] = 1046.50
 
-
-class Step:
-    FullStep, HalfStep, Endpt = range(3)
-
 # Initial values describe
 # the notes to play for the Ionian
 # mode
@@ -84,7 +80,6 @@ while True:
             stream.stop_stream()
             stream.close()
             p.terminate()
-
 
     # Find the full-full-full-half-step pattern
     # in the current scale (5 note subpattern)
