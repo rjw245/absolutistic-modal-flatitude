@@ -1,4 +1,4 @@
-I started taking guitar lessons recently, and my teacher Sam Davis taught me about modes of the major scale and the relationship between them.
+I started taking guitar lessons recently, and my teacher [Sam Davis](http://www.samdavis.com/) taught me about modes of the major scale and the relationship between them.
 
 He calls this concept "absolutistic modal flatitude", hence the name of this project. I don't think this is a widely-used term though...
 
