@@ -49,11 +49,9 @@ to_play = deque([True,
                  False,
                  True])
 
-notes_to_play = 13
-
 while True:
     # Play one scale
-    for note_idx in xrange(0, notes_to_play):
+    for note_idx in xrange(0, len(frequencies)):
         should_play = to_play[note_idx % len(to_play)]
         if should_play:
             # sudo apt-get install python-pyaudio
