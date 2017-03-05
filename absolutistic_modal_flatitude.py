@@ -61,7 +61,7 @@ while True:
 
             # See http://www.phy.mtu.edu/~suits/notefreqs.html
             FREQUENCY = frequencies.values()[note_idx % len(frequencies)]
-            LENGTH = .5  # seconds to play sound
+            LENGTH = .3  # seconds to play sound
 
             NUMBEROFFRAMES = int(BITRATE * LENGTH)
             RESTFRAMES = NUMBEROFFRAMES % BITRATE
@@ -85,13 +85,17 @@ while True:
             p.terminate()
 
 
-    # Shift notes around in the scale
+    # Find the full-full-full-half-step pattern
+    # in the current scale (5 note subpattern)
     pattern = [False, True,  # Full step
                False, True,  # Full step
                False, True,  # Full step
                True]         # Half step
     (start, end) = contains(pattern, to_play)
     temp = to_play[(end-3) % len(to_play)]
+
+    # Flat the 4th note of the subpattern to move us to a new mode
+    # of this scale
     to_play[(end-3) % len(to_play)] = to_play[(end-2) % len(to_play)]
     to_play[(end-2) % len(to_play)] = temp
 
