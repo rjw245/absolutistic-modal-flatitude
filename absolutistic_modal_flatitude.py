@@ -33,6 +33,9 @@ frequencies['C6'] = 1046.50
 class Step:
     FullStep, HalfStep, Endpt = range(3)
 
+# Initial values describe
+# the notes to play for the Ionian
+# mode
 to_play = deque([True,
                  False,
                  True,
