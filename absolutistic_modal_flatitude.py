@@ -45,14 +45,12 @@ to_play = deque([True,
                  False,
                  True])
 
+p = pyaudio.PyAudio()
 while True:
     # Play one scale
     for note_idx in xrange(0, len(frequencies)):
         should_play = to_play[note_idx % len(to_play)]
         if should_play:
-            # sudo apt-get install python-pyaudio
-            PyAudio = pyaudio.PyAudio
-
             # See http://en.wikipedia.org/wiki/Bit_rate#Audio
             BITRATE = 16000  # number of frames per second/frameset.
 
@@ -71,7 +69,6 @@ while True:
             for x in xrange(RESTFRAMES):
                 WAVEDATA = WAVEDATA+chr(128)
 
-            p = PyAudio()
             stream = p.open(format=p.get_format_from_width(1),
                             channels=1,
                             rate=BITRATE,
@@ -79,7 +76,6 @@ while True:
             stream.write(WAVEDATA)
             stream.stop_stream()
             stream.close()
-            p.terminate()
 
     # Find the full-full-full-half-step pattern
     # in the current scale (5 note subpattern)
