@@ -79,7 +79,7 @@ if __name__ == "__main__":
         for note_idx in xrange(0, len(frequencies)):
             should_play = cur_mode[note_idx % len(cur_mode)]
             if should_play:
-                freq = frequencies.values()[note_idx % len(frequencies)]
+                freq = frequencies.values()[note_idx]
                 play_note(freq, 0.3)
 
         # Find the full-full-full-half-step subpattern
