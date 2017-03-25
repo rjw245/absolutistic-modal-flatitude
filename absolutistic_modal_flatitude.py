@@ -56,22 +56,27 @@ frequencies['A#'] = 932.33
 frequencies['B'] = 987.77
 frequencies['C6'] = 1046.50
 
-# Initial values describe
-# the notes to play for the Ionian
-# mode
-cur_mode = [True,   # 1
-            False,  # flat 2
-            True,   # 2
-            False,  # flat 3
-            True,   # 3
-            True,   # 4
-            False,  # flat 5
-            True,   # 5
-            False,  # flat 6
-            True,   # 6
-            False,  # 7 (sometimes flat 7)
-            True]   # major 7 (or sometimes just 7)
+# Which notes to play for the
+# Ionian mode.
 
+ionian = [True,   # 1
+          False,  # flat 2
+          True,   # 2
+          False,  # flat 3
+          True,   # 3
+          True,   # 4
+          False,  # flat 5
+          True,   # 5
+          False,  # flat 6
+          True,   # 6
+          False,  # 7 (sometimes flat 7)
+          True]   # major 7 (or sometimes just 7)
+
+# Notes to play for whatever mode we are in.
+# Use a deque so that, when the root is displaced
+# (i.e. first note of the scale is no longer C5),
+# we can rotate the scale back to return the root to C5.
+cur_mode = deque(ionian)  # Copy the Ionian mode as the current mode
 
 if __name__ == "__main__":
     while True:
@@ -82,19 +87,15 @@ if __name__ == "__main__":
                 freq = frequencies.values()[note_idx]
                 play_note(freq, 0.3)
 
-        # Find the full-full-full-half-step subpattern
-        # in the current mode (5 note subpattern)
-        subpattern = [False, True,  # Full step (one unplayed, next played)
-                      False, True,  # Full step
-                      False, True,  # Full step
-                      True]         # Half step
-        (start, end) = contains(subpattern, cur_mode)
+        # Find the f-f-h-f-f-f-h (Ionian mode) wherever
+        # it is in the current mode
+        (start, end) = contains(ionian, cur_mode)
 
-        # Flat the 4th note of the subpattern to move us to a new mode
+        # Flat the 7th note of the subpattern to move us to a new mode
         # of this scale
-        temp = cur_mode[(end-3) % len(cur_mode)]
-        cur_mode[(end-3) % len(cur_mode)] = cur_mode[(end-2) % len(cur_mode)]
-        cur_mode[(end-2) % len(cur_mode)] = temp
+        temp = cur_mode[(end-2) % len(cur_mode)]
+        cur_mode[(end-2) % len(cur_mode)] = cur_mode[(end-1) % len(cur_mode)]
+        cur_mode[(end-1) % len(cur_mode)] = temp
 
         # Make sure C stays the root. If we wrap around modes, shift
         # back to a C scale.
