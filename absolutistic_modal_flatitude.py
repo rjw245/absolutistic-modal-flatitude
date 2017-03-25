@@ -59,18 +59,18 @@ frequencies['C6'] = 1046.50
 # Initial values describe
 # the notes to play for the Ionian
 # mode
-cur_mode = [True,
-            False,
-            True,
-            False,
-            True,
-            True,
-            False,
-            True,
-            False,
-            True,
-            False,
-            True]
+cur_mode = [True,   # 1
+            False,  # flat 2
+            True,   # 2
+            False,  # flat 3
+            True,   # 3
+            True,   # 4
+            False,  # flat 5
+            True,   # 5
+            False,  # flat 6
+            True,   # 6
+            False,  # 7 (sometimes flat 7)
+            True]   # major 7 (or sometimes just 7)
 
 
 if __name__ == "__main__":
