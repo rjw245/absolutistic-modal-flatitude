@@ -59,18 +59,18 @@ frequencies['C6'] = 1046.50
 # Initial values describe
 # the notes to play for the Ionian
 # mode
-cur_mode = deque([True,
-                  False,
-                  True,
-                  False,
-                  True,
-                  True,
-                  False,
-                  True,
-                  False,
-                  True,
-                  False,
-                  True])
+cur_mode = [True,
+            False,
+            True,
+            False,
+            True,
+            True,
+            False,
+            True,
+            False,
+            True,
+            False,
+            True]
 
 
 if __name__ == "__main__":
