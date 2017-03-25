@@ -58,7 +58,6 @@ frequencies['C6'] = 1046.50
 
 # Which notes to play for the
 # Ionian mode.
-
 ionian = [True,   # 1
           False,  # flat 2
           True,   # 2
@@ -87,18 +86,18 @@ if __name__ == "__main__":
                 freq = frequencies.values()[note_idx]
                 play_note(freq, 0.3)
 
-        # Find the f-f-h-f-f-f-h (Ionian mode) wherever
+        # Find the f-f-h-f-f-f-h pattern (Ionian mode) wherever
         # it is in the current mode
         (start, end) = contains(ionian, cur_mode)
 
-        # Flat the 7th note of the subpattern to move us to a new mode
+        # Flat the 7th note of the pattern to move us to a new mode
         # of this scale
         temp = cur_mode[(end-2) % len(cur_mode)]
         cur_mode[(end-2) % len(cur_mode)] = cur_mode[(end-1) % len(cur_mode)]
         cur_mode[(end-1) % len(cur_mode)] = temp
 
-        # Make sure C stays the root. If we wrap around modes, shift
-        # back to a C scale.
+        # Make sure C stays the root.
+        # If we wrap around modes, shift back to a C scale.
         if not cur_mode[0]:
             cur_mode.rotate(1)
 
