@@ -68,8 +68,8 @@ ionian = [True,   # 1
           True,   # 5
           False,  # flat 6
           True,   # 6
-          False,  # 7 (sometimes flat 7)
-          True]   # major 7 (or sometimes just 7)
+          False,  # 7 (sometimes called flat 7)
+          True]   # major 7 (sometimes just called 7)
 
 # Notes to play for whatever mode we are in.
 # Use a deque so that, when the root is displaced
