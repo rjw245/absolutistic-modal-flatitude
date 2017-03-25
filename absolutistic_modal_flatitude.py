@@ -77,8 +77,20 @@ ionian = [True,   # 1
 # we can rotate the scale back to return the root to C5.
 cur_mode = deque(ionian)  # Copy the Ionian mode as the current mode
 
+mode_names = ['Ionian',
+              'Mixolydian',
+              'Dorian',
+              'Aeolian',
+              'Phrygian',
+              'Locrian',
+              'Lydian']
+
 if __name__ == "__main__":
     while True:
+        cur_mode_name = mode_names.pop(0)
+        print cur_mode_name
+        mode_names.append(cur_mode_name)
+
         # Play one scale
         for note_idx in xrange(0, len(frequencies)):
             should_play = cur_mode[note_idx % len(cur_mode)]
