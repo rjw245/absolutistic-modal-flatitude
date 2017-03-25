@@ -1,11 +1,38 @@
 import math
 import pyaudio
+import time
 from collections import OrderedDict, deque
 from itertools import cycle
 
+p = pyaudio.PyAudio()
+
+
+def play_note(freq, duration):
+    # See http://en.wikipedia.org/wiki/Bit_rate#Audio
+    BITRATE = 16000  # number of frames per second/frameset.
+
+    NUMBEROFFRAMES = int(BITRATE * duration)
+    RESTFRAMES = NUMBEROFFRAMES % BITRATE
+    WAVEDATA = ''
+
+    for x in xrange(NUMBEROFFRAMES):
+        WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/freq)/math.pi))*127+128))    
+
+    # fill remainder of frameset with silence
+    for x in xrange(RESTFRAMES):
+        WAVEDATA = WAVEDATA+chr(128)
+
+    stream = p.open(format=p.get_format_from_width(1),
+                    channels=1,
+                    rate=BITRATE,
+                    output=True)
+    stream.write(WAVEDATA)
+    stream.stop_stream()
+    stream.close()
+
 
 def contains(small, big):
-    big_cycle = list(big) + list(big)
+    big_cycle = list(big) + list(big)  # Allows us to wrap around the end
     for i in xrange(0, len(big)):
         for j in xrange(len(small)):
             if big_cycle[i+j] != small[j]:
@@ -32,65 +59,45 @@ frequencies['C6'] = 1046.50
 # Initial values describe
 # the notes to play for the Ionian
 # mode
-to_play = deque([True,
-                 False,
-                 True,
-                 False,
-                 True,
-                 True,
-                 False,
-                 True,
-                 False,
-                 True,
-                 False,
-                 True])
+cur_mode = deque([True,
+                  False,
+                  True,
+                  False,
+                  True,
+                  True,
+                  False,
+                  True,
+                  False,
+                  True,
+                  False,
+                  True])
 
-p = pyaudio.PyAudio()
+
 while True:
     # Play one scale
     for note_idx in xrange(0, len(frequencies)):
-        should_play = to_play[note_idx % len(to_play)]
+        should_play = cur_mode[note_idx % len(cur_mode)]
         if should_play:
-            # See http://en.wikipedia.org/wiki/Bit_rate#Audio
-            BITRATE = 16000  # number of frames per second/frameset.
+            freq = frequencies.values()[note_idx % len(frequencies)]
+            play_note(freq, 0.3)
 
-            # See http://www.phy.mtu.edu/~suits/notefreqs.html
-            FREQUENCY = frequencies.values()[note_idx % len(frequencies)]
-            LENGTH = .3  # seconds to play sound
-
-            NUMBEROFFRAMES = int(BITRATE * LENGTH)
-            RESTFRAMES = NUMBEROFFRAMES % BITRATE
-            WAVEDATA = ''
-
-            for x in xrange(NUMBEROFFRAMES):
-                WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127+128))    
-
-            # fill remainder of frameset with silence
-            for x in xrange(RESTFRAMES):
-                WAVEDATA = WAVEDATA+chr(128)
-
-            stream = p.open(format=p.get_format_from_width(1),
-                            channels=1,
-                            rate=BITRATE,
-                            output=True)
-            stream.write(WAVEDATA)
-            stream.stop_stream()
-            stream.close()
-
-    # Find the full-full-full-half-step pattern
-    # in the current scale (5 note subpattern)
-    pattern = [False, True,  # Full step
-               False, True,  # Full step
-               False, True,  # Full step
-               True]         # Half step
-    (start, end) = contains(pattern, to_play)
-    temp = to_play[(end-3) % len(to_play)]
+    # Find the full-full-full-half-step subpattern
+    # in the current mode (5 note subpattern)
+    subpattern = [False, True,  # Full step (one note unplayed, next played)
+                  False, True,  # Full step
+                  False, True,  # Full step
+                  True]         # Half step
+    (start, end) = contains(subpattern, cur_mode)
 
     # Flat the 4th note of the subpattern to move us to a new mode
     # of this scale
-    to_play[(end-3) % len(to_play)] = to_play[(end-2) % len(to_play)]
-    to_play[(end-2) % len(to_play)] = temp
+    temp = cur_mode[(end-3) % len(cur_mode)]
+    cur_mode[(end-3) % len(cur_mode)] = cur_mode[(end-2) % len(cur_mode)]
+    cur_mode[(end-2) % len(cur_mode)] = temp
 
-    # Must always play the first note, keep it a C scale
-    if not to_play[0]:
-        to_play.rotate(1)
+    # Make sure C stays the root. If we wrap around modes, shift
+    # back to a C scale.
+    if not cur_mode[0]:
+        cur_mode.rotate(1)
+
+    time.sleep(1)
